@@ -1,48 +1,50 @@
 document.addEventListener('DOMContentLoaded', () => {
     const products = [
-        { id: 'product1', qty: 'qty1', price: 'price1' },
-        { id: 'product2', qty: 'qty2', price: 'price2' },
-        { id: 'product3', qty: 'qty3', price: 'price3' },
-        { id: 'product4', qty: 'qty4', price: 'price4' },
-        { id: 'product5', qty: 'qty5', price: 'price5' },
-        { id: 'product6', qty: 'qty6', price: 'price6' }
+        { label: 'Horsebit Gold Sandals', price: 62000.00, qtyElement: document.getElementById('qty1') },
+        { label: 'Horsebit White Sandals', price: 62000.00, qtyElement: document.getElementById('qty2') },
+        { label: 'Horsebit Red Sandals', price: 62000.00, qtyElement: document.getElementById('qty3') },
+        { label: 'Horsebit Orange Sandals', price: 9000.00, qtyElement: document.getElementById('qty4') },
+        { label: 'Cutout Leather Sandals', price: 20000.00, qtyElement: document.getElementById('qty5') },
+        { label: 'Horsebit Pink Sandals', price: 62000.00, qtyElement: document.getElementById('qty6') },
     ];
 
-    const carts = document.getElementById('carts');
-    const total = document.getElementById('total');
-    const cash = document.getElementById('cash');
-    const change = document.getElementById('change');
+    const carts = document.getElementById("carts");
+    const total = document.getElementById("total");
+    const cash = document.getElementById("cash");
+    const change = document.getElementById("change");
 
     function addOrder() {
-        carts.textContent = '';
+        carts.textContent = "";
         let totalPrice = 0;
 
         products.forEach(product => {
-            const qty = parseFloat(document.getElementById(product.qty).value);
-            const price = parseFloat(document.getElementById(product.price).textContent);
-            const name = document.getElementById(product.id).textContent;
-
+            const qty = parseFloat(product.qtyElement.value);
             if (qty > 0) {
-                const order = ${qty} pc/s x ${price} ------ ${name} ------ Php ${qty * price}\n;
+                const order = ${qty} pc/s x ${product.price}------${product.label}------ Php${(qty * product.price).toFixed(2)}\n;
                 carts.textContent += order;
-                totalPrice += qty * price;
+                totalPrice += qty * product.price;
             }
         });
 
-        total.value = ₱ ${totalPrice.toFixed(2)};
+        total.value = '₱ ' + totalPrice.toFixed(2);
     }
 
     function calculateChange() {
         const totalPrice = parseFloat(total.value.replace('₱ ', ''));
         const cashTendered = parseFloat(cash.value);
-
         if (!isNaN(totalPrice) && !isNaN(cashTendered) && cashTendered >= totalPrice) {
             const changeAmount = cashTendered - totalPrice;
-            change.value = ₱ ${changeAmount.toFixed(2)};
+            change.value = '₱ ' + changeAmount.toFixed(2);
         } else {
             change.value = '';
         }
     }
 
     products.forEach(product => {
-        document.getElementById(product.qty).add
+        product.qtyElement.addEventListener("keyup", addOrder);
+        product.qtyElement.addEventListener("change", addOrder);
+    });
+
+    cash.addEventListener("keyup", calculateChange);
+    cash.addEventListener("change", calculateChange);
+});
